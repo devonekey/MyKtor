@@ -11,5 +11,11 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello Ktor!", ContentType.Text.Plain)
         }
+
+        get("/test1") {
+            val text = "<h1>Hello From Ktor</h1>"
+            val type = ContentType.parse("text/html")
+            call.respondText(text, type)
+        }
     }
 }
