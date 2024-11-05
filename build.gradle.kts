@@ -1,5 +1,6 @@
 val ktor_version: String by project
 val logback_version: String by project
+val slf4j_version: String by project
 val yaml_version: String by project
 
 plugins {
@@ -24,6 +25,7 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml:$yaml_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("org.slf4j:slf4j-api:$slf4j_version")
 }
 
 tasks.test {
