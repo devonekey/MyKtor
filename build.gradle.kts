@@ -1,3 +1,5 @@
+val junit_version: String by project
+val kotlin_version: String by project
 val ktor_version: String by project
 val logback_version: String by project
 val slf4j_version: String by project
@@ -26,6 +28,10 @@ dependencies {
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("org.slf4j:slf4j-api:$slf4j_version")
+
+    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
 }
 
 tasks.test {
