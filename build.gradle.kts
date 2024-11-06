@@ -27,6 +27,7 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml:$yaml_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("org.slf4j:slf4j-api:$slf4j_version")
 
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
