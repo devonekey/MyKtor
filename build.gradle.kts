@@ -1,4 +1,5 @@
 val ktor_version: String by project
+val logback_version: String by project
 val yaml_version: String by project
 
 plugins {
@@ -19,6 +20,7 @@ application {
 }
 
 dependencies {
+    implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-config-yaml:$yaml_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
