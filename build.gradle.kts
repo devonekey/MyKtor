@@ -1,4 +1,5 @@
 val ktor_version: String by project
+val yaml_version: String by project
 
 plugins {
     application
@@ -18,6 +19,7 @@ application {
 }
 
 dependencies {
+    implementation("io.ktor:ktor-server-config-yaml:$yaml_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
 }
