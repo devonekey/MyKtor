@@ -2,14 +2,9 @@ package com.example
 
 import com.example.plugins.configureRouting
 import io.ktor.server.application.Application
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
+import io.ktor.server.netty.EngineMain
 
-fun main() {
-    embeddedServer(Netty, port = 8080) {
-        module()
-    }.start(wait = true)
-}
+fun main(args: Array<String>) = EngineMain.main(args)
 
 fun Application.module() {
     configureRouting()
