@@ -33,7 +33,7 @@ fun Application.configureRouting() {
             throw IllegalStateException("Too Busy")
         }
 
-        get("tasks") {
+        get("/tasks") {
             call.respondText(
                 contentType = ContentType.parse("text/html"),
                 text = """
