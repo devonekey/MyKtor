@@ -38,7 +38,7 @@ fun Application.configureRouting() {
         get("/tasks") {
             call.respondText(
                 contentType = ContentType.parse("text/html"),
-                text = TaskRepository.tasks.taskAsTable()
+                text = TaskRepository.allTask().taskAsTable()
             )
         }
     }
