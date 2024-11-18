@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.model.Priority
+import com.example.model.Task
 import com.example.model.TaskRepository
 import com.example.model.taskAsTable
 import io.ktor.http.ContentType
@@ -9,9 +10,11 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.http.content.staticResources
 import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.receiveParameters
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 
 fun Application.configureRouting() {
@@ -70,6 +73,37 @@ fun Application.configureRouting() {
                     text = tasks.taskAsTable()
                 )
             } catch (_: IllegalArgumentException) {
+                call.respond(HttpStatusCode.BadRequest)
+            }
+        }
+
+        post("/tasks") {
+            val formContent = call.receiveParameters()
+            val params = Triple(
+                formContent["name"] ?: "",
+                formContent["description"] ?: "",
+                formContent["priority"] ?: ""
+            )
+
+            if (params.toList().any { it.isBlank() }) {
+                call.respond(HttpStatusCode.BadRequest)
+
+                return@post
+            }
+
+            try {
+                TaskRepository.addTask(
+                    Task(
+                        name = params.first,
+                        description = params.second,
+                        priority = Priority.valueOf(params.third)
+                    )
+                )
+
+                call.respond(HttpStatusCode.NoContent)
+            } catch(_: IllegalArgumentException) {
+                call.respond(HttpStatusCode.BadRequest)
+            } catch (_: IllegalStateException) {
                 call.respond(HttpStatusCode.BadRequest)
             }
         }
