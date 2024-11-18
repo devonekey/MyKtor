@@ -1,8 +1,13 @@
 package com.example
 
 import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.http.formUrlEncode
 import io.ktor.server.testing.testApplication
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -59,5 +64,23 @@ class ApplicationTest {
             expected = HttpStatusCode.NotFound,
             actual = response.status
         )
+    }
+
+    @Test
+    fun newTasksCanBeAdded() = testApplication {
+        application { module() }
+
+        val response = client.post("/tasks") {
+            contentType(ContentType.Application.FormUrlEncoded)
+            setBody(
+                listOf(
+                    "name" to "Swimming",
+                    "description" to "Go to the beach",
+                    "priority" to "Low"
+                ).formUrlEncode()
+            )
+        }
+
+        assertEquals(HttpStatusCode.NoContent, response.status)
     }
 }
