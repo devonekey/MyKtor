@@ -23,6 +23,7 @@ fun Application.configureRouting() {
 
     routing {
         staticResources("/content", "mycontent")
+        staticResources("/task-ui", "task-ui")
 
         get("/") {
             call.respondText("Hello Ktor!", ContentType.Text.Plain)
