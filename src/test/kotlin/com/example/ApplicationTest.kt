@@ -67,6 +67,20 @@ class ApplicationTest {
     }
 
     @Test
+    fun tasksCanBeFoundByName() = testApplication {
+        application { module() }
+
+        val response = client.get("/tasks/byName/shopping")
+        val body = response.bodyAsText()
+
+        assertEquals(
+            expected = HttpStatusCode.OK,
+            actual = response.status
+        )
+        assertContains(body, "Buy the groceries")
+    }
+
+    @Test
     fun newTasksCanBeAdded() = testApplication {
         application { module() }
 
