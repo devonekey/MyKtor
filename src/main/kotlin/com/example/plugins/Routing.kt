@@ -51,6 +51,29 @@ fun Application.configureRouting() {
                 )
             }
 
+            get("/byName/{taskName}") {
+                val name = call.parameters["taskName"]
+
+                if (name.isNullOrBlank()) {
+                    call.respond(HttpStatusCode.BadRequest)
+
+                    return@get
+                }
+
+                val task = TaskRepository.taskByName(name)
+
+                if (task == null) {
+                    call.respond(HttpStatusCode.NotFound)
+
+                    return@get
+                }
+
+                call.respondText(
+                    contentType = ContentType.Text.Html,
+                    text = listOf(task).taskAsTable()
+                )
+            }
+
             get("/byPriority/{priority}") {
                 val priorityAsText = call.parameters["priority"]
 
