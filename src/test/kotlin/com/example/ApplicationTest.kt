@@ -82,5 +82,14 @@ class ApplicationTest {
         }
 
         assertEquals(HttpStatusCode.NoContent, response.status)
+
+        val response2 = client.get("/tasks")
+
+        assertEquals(HttpStatusCode.OK, response2.status)
+
+        val body = response2.bodyAsText()
+
+        assertContains(body, "Swimming")
+        assertContains(body, "Go to the beach")
     }
 }
