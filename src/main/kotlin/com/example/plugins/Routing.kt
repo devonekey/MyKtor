@@ -45,10 +45,7 @@ fun Application.configureRouting() {
 
         route("/tasks") {
             get {
-                call.respondText(
-                    contentType = ContentType.parse("text/html"),
-                    text = TaskRepository.allTask().taskAsTable()
-                )
+                call.respond(TaskRepository.allTask())
             }
 
             get("/byName/{taskName}") {
