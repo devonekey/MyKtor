@@ -8,6 +8,7 @@ val yaml_version: String by project
 plugins {
     application
     kotlin("jvm") version "2.0.20"
+    kotlin("plugin.serialization") version "1.9.10"
     id("io.ktor.plugin") version "3.0.1"
 }
 
@@ -24,7 +25,9 @@ application {
 
 dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-server-config-yaml:$yaml_version")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
