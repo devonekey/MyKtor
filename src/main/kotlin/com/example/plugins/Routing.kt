@@ -3,7 +3,6 @@ package com.example.plugins
 import com.example.model.Priority
 import com.example.model.Task
 import com.example.model.TaskRepository
-import com.example.model.taskAsTable
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -66,10 +65,7 @@ fun Application.configureRouting() {
                     return@get
                 }
 
-                call.respondText(
-                    contentType = ContentType.Text.Html,
-                    text = listOf(task).taskAsTable()
-                )
+                call.respond(listOf(task))
             }
 
             get("/byPriority/{priority}") {
@@ -91,10 +87,7 @@ fun Application.configureRouting() {
                         return@get
                     }
 
-                    call.respondText(
-                        contentType = ContentType.Text.Html,
-                        text = tasks.taskAsTable()
-                    )
+                    call.respond(tasks)
                 } catch (_: IllegalArgumentException) {
                     call.respond(HttpStatusCode.BadRequest)
                 }
