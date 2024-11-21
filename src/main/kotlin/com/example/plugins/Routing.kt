@@ -9,7 +9,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.http.content.staticResources
 import io.ktor.server.plugins.statuspages.StatusPages
-import io.ktor.server.request.receiveParameters
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
@@ -94,28 +94,10 @@ fun Application.configureRouting() {
             }
 
             post {
-                val formContent = call.receiveParameters()
-                val params = Triple(
-                    formContent["name"] ?: "",
-                    formContent["description"] ?: "",
-                    formContent["priority"] ?: ""
-                )
-
-                if (params.toList().any { it.isBlank() }) {
-                    call.respond(HttpStatusCode.BadRequest)
-
-                    return@post
-                }
-
                 try {
-                    TaskRepository.addTask(
-                        Task(
-                            name = params.first,
-                            description = params.second,
-                            priority = Priority.valueOf(params.third)
-                        )
-                    )
+                    val task = call.receive<Task>()
 
+                    TaskRepository.addTask(task)
                     call.respond(HttpStatusCode.NoContent)
                 } catch (_: IllegalArgumentException) {
                     call.respond(HttpStatusCode.BadRequest)
