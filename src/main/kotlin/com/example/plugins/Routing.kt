@@ -12,6 +12,7 @@ import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
+import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
@@ -103,6 +104,22 @@ fun Application.configureRouting() {
                     call.respond(HttpStatusCode.BadRequest)
                 } catch (_: IllegalStateException) {
                     call.respond(HttpStatusCode.BadRequest)
+                }
+            }
+
+            delete("/{taskName}") {
+                val name = call.parameters["taskName"]
+
+                if (name.isNullOrBlank()) {
+                    call.respond(HttpStatusCode.BadRequest)
+
+                    return@delete
+                }
+
+                if (TaskRepository.removeTask(name)) {
+                    call.respond(HttpStatusCode.NoContent)
+                } else {
+                    call.respond(HttpStatusCode.NotFound)
                 }
             }
         }
