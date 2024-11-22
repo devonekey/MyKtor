@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test
 import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class TaskRepositoryTest {
     @BeforeEach
@@ -56,5 +58,12 @@ class TaskRepositoryTest {
         }
         TaskRepository.addTask(Task("repairing", "Repair the car", Priority.Low))
         assertEquals(expected = 7, actual = TaskRepository.allTask().size)
+    }
+
+    @Test
+    fun `TaskReposiroty로부터 Task를 제거할 수 있다`() {
+        assertTrue(TaskRepository.removeTask("cooking"))
+        assertEquals(expected = 5, actual = TaskRepository.allTask().size)
+        assertNull(TaskRepository.taskByName("cooking"))
     }
 }
