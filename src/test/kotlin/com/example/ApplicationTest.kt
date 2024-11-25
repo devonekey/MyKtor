@@ -36,15 +36,25 @@ class ApplicationTest {
     fun tasksCanBeFoundByPriority() = testApplication {
         application { module() }
 
+        val client = createClient {
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
         val response = client.get("/tasks/byPriority/Medium")
-        val body = response.bodyAsText()
+        val descriptions = response.body<List<Task>>()
+            .map { task -> task.description }
 
         assertEquals(
             expected = HttpStatusCode.OK,
             actual = response.status
         )
-        assertContains(body, "Mow the lawn")
-        assertContains(body, "Paint the fence")
+        assertContains(descriptions, "Mow the lawn")
+        assertContains(descriptions, "Paint the fence")
     }
 
     @Test
@@ -75,14 +85,24 @@ class ApplicationTest {
     fun tasksCanBeFoundByName() = testApplication {
         application { module() }
 
+        val client = createClient {
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
         val response = client.get("/tasks/byName/shopping")
-        val body = response.bodyAsText()
+        val descriptions = response.body<List<Task>>()
+            .map { task -> task.description }
 
         assertEquals(
             expected = HttpStatusCode.OK,
             actual = response.status
         )
-        assertContains(body, "Buy the groceries")
+        assertContains(descriptions, "Buy the groceries")
     }
 
     @Test
