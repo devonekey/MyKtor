@@ -1,5 +1,6 @@
 package com.example
 
+import com.example.model.Priority
 import com.example.model.Task
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -10,7 +11,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import io.ktor.http.formUrlEncode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.Json
@@ -109,19 +109,6 @@ class ApplicationTest {
     fun newTasksCanBeAdded() = testApplication {
         application { module() }
 
-        val response = client.post("/tasks") {
-            contentType(ContentType.Application.FormUrlEncoded)
-            setBody(
-                listOf(
-                    "name" to "Swimming",
-                    "description" to "Go to the beach",
-                    "priority" to "Low"
-                ).formUrlEncode()
-            )
-        }
-
-        assertEquals(HttpStatusCode.NoContent, response.status)
-
         val client = createClient {
             install(ContentNegotiation) {
                 json(Json {
@@ -131,6 +118,13 @@ class ApplicationTest {
                 })
             }
         }
+        val response = client.post("/tasks") {
+            contentType(ContentType.Application.Json)
+            setBody(Task("Swimming", "Go to the beach", Priority.Low))
+        }
+
+        assertEquals(HttpStatusCode.NoContent, response.status)
+
         val response2 = client.get("/tasks")
 
         assertEquals(HttpStatusCode.OK, response2.status)
