@@ -33,6 +33,7 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("org.slf4j:slf4j-api:$slf4j_version")
 
+    testImplementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
