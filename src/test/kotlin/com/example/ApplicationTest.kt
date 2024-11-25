@@ -4,6 +4,7 @@ import com.example.model.Priority
 import com.example.model.Task
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -139,5 +140,27 @@ class ApplicationTest {
 
         assertContains(names, "Swimming")
         assertContains(descriptions, "Go to the beach")
+    }
+
+    @Test
+    fun taskCanBeDeleted() = testApplication {
+        application { module() }
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+        val response = client.delete("/tasks/cleaning")
+
+        assertEquals(HttpStatusCode.NoContent, response.status)
+
+        val response2 = client.get("/tasks/byName/cleaning")
+
+        assertEquals(HttpStatusCode.NotFound, response2.status)
     }
 }
