@@ -1,5 +1,8 @@
 package com.example
 
+import com.example.model.Task
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -8,7 +11,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.formUrlEncode
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.testApplication
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContains
@@ -97,13 +102,28 @@ class ApplicationTest {
 
         assertEquals(HttpStatusCode.NoContent, response.status)
 
+        val client = createClient {
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
         val response2 = client.get("/tasks")
 
         assertEquals(HttpStatusCode.OK, response2.status)
 
-        val body = response2.bodyAsText()
+        val (names, descriptions) = response2.body<List<Task>>()
+            .let { tasks ->
+                Pair(
+                    tasks.map { task -> task.name },
+                    tasks.map { task -> task.description }
+                )
+            }
 
-        assertContains(body, "Swimming")
-        assertContains(body, "Go to the beach")
+        assertContains(names, "Swimming")
+        assertContains(descriptions, "Go to the beach")
     }
 }
