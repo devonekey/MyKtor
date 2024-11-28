@@ -21,10 +21,14 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class ApplicationTest {
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
     @Test
     fun testRoot() = testApplication {
         application {
