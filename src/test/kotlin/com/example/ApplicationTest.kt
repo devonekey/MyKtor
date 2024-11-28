@@ -12,6 +12,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -45,18 +46,11 @@ class ApplicationTest {
     fun tasksCanBeFoundByPriority() = testApplication {
         application { module() }
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json(Json {
-                    prettyPrint = true
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                })
-            }
-        }
-        val response = client.get("/tasks/byPriority/Medium")
-        val descriptions = response.body<List<Task>>()
-            .map { task -> task.description }
+        val priority = Priority.Medium
+        val response = client.getAsJsonPath("/tasks/byPriority/$priority")
+            .read<HttpResponse>("$")
+        val descriptions: List<String> = JsonPath.parse(response.body<String>())
+            .read("$[*].description")
 
         assertEquals(
             expected = HttpStatusCode.OK,
@@ -94,18 +88,10 @@ class ApplicationTest {
     fun tasksCanBeFoundByName() = testApplication {
         application { module() }
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json(Json {
-                    prettyPrint = true
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                })
-            }
-        }
-        val response = client.get("/tasks/byName/shopping")
-        val descriptions = response.body<List<Task>>()
-            .map { task -> task.description }
+        val response = client.getAsJsonPath("/tasks/byName/shopping")
+            .read<HttpResponse>("$")
+        val descriptions: List<String> = JsonPath.parse(response.body<String>())
+            .read("$[*].description")
 
         assertEquals(
             expected = HttpStatusCode.OK,
