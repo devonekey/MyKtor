@@ -2,8 +2,12 @@ package com.example
 
 import com.example.model.Priority
 import com.example.model.Task
+import com.jayway.jsonpath.DocumentContext
+import com.jayway.jsonpath.JsonPath
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.accept
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -162,5 +166,13 @@ class ApplicationTest {
         val response2 = client.get("/tasks/byName/cleaning")
 
         assertEquals(HttpStatusCode.NotFound, response2.status)
+    }
+
+    suspend fun HttpClient.getAsJsonPath(url: String): DocumentContext {
+        val response = this.get(url) {
+            accept(ContentType.Application.Json)
+        }
+
+        return JsonPath.parse(response)
     }
 }
