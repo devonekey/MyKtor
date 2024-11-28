@@ -177,6 +177,8 @@ class ApplicationTest {
             accept(ContentType.Application.Json)
         }
 
+        logger.info("status: ${response.status}")
+
         return JsonPath.parse(response)
     }
 }
