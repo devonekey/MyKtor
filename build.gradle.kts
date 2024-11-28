@@ -1,3 +1,4 @@
+val json_path_version: String by project
 val junit_version: String by project
 val kotlin_version: String by project
 val ktor_version: String by project
@@ -33,6 +34,7 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("org.slf4j:slf4j-api:$slf4j_version")
 
+    testImplementation("com.jayway.jsonpath:json-path:$json_path_version")
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
