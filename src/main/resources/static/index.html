@@ -1,7 +1,48 @@
 <html lang="JavaScript">
 <head>
-    <title>A Simple SPA For Tasks</title>
+    <title>Using Ktor WebSockets</title>
     <script type="application/javascript">
+        function readAndDisplayAllTasks() {
+            clearTable();
+
+            const serverURL = 'ws://0.0.0.0:8080/tasks';
+            const socket = new WebSocket(serverURL);
+            socket.onopen = logOpenToConsole;
+            socket.onclose = logCloseToConsole;
+            socket.onmessage = readAndDisplayTask;
+        }
+
+        function readAndDisplayTask(event) {
+            let task = JSON.parse(event.data);
+
+            logTaskToConsole(task);
+            addTaskToTable(task);
+        }
+
+        function logTaskToConsole(task) {
+            console.log(`Received ${task.name}`);
+        }
+
+        function logCloseToConsole() {
+            console.log("Web socket connection closed");
+        }
+
+        function logOpenToConsole() {
+            console.log("Web socket connection opened");
+        }
+
+        function tableBody() {
+            return document.getElementById("tasksTableBody");
+        }
+
+        function clearTable() {
+            tableBody().innerHTML = "";
+        }
+
+        function addTaskToTable(task) {
+            tableBody().appendChild(taskRow(task));
+        }
+
         function fetchAndDisplayTasks() {
             fetchTasks()
                 .then(tasks => displayTasks(tasks))
@@ -49,8 +90,8 @@
     </script>
 </head>
 <body>
-<h1>Viewing Tasks Via JS</h1>
-<form action="javascript:fetchAndDisplayTasks()">
+<h1>Viewing Tasks Via WebSockets</h1>
+<form action="javascript:readAndDisplayAllTasks()">
     <input type="submit" value="View The Tasks">
 </form>
 <table>
