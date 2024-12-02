@@ -32,6 +32,7 @@ dependencies {
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
+    implementation("io.ktor:ktor-server-websockets:$ktor_version")
     implementation("org.slf4j:slf4j-api:$slf4j_version")
 
     testImplementation("com.jayway.jsonpath:json-path:$json_path_version")
