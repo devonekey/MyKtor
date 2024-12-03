@@ -5,6 +5,7 @@ import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.routing.routing
+import io.ktor.server.websocket.DefaultWebSocketServerSession
 import io.ktor.server.websocket.WebSockets
 import io.ktor.server.websocket.pingPeriod
 import io.ktor.server.websocket.sendSerialized
@@ -27,12 +28,15 @@ fun Application.configureSockets() {
 
     routing {
         webSocket("/tasks") {
-            for (task in TaskRepository.allTask()) {
-                sendSerialized(task)
-                delay(1.seconds)
-            }
-
+            sendAllTasks()
             close(CloseReason(CloseReason.Codes.NORMAL, "All done"))
         }
+    }
+}
+
+private suspend fun DefaultWebSocketServerSession.sendAllTasks() {
+    for (task in TaskRepository.allTask()) {
+        sendSerialized(task)
+        delay(1.seconds)
     }
 }
