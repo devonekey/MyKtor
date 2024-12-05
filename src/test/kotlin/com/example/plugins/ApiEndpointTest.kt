@@ -1,7 +1,8 @@
-package com.example
+package com.example.plugins
 
 import com.example.model.Priority
 import com.example.model.Task
+import com.example.module
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
 import io.ktor.client.HttpClient
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
-class ApplicationTest {
+class ApiEndpointTest {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     @Test
