@@ -1,7 +1,7 @@
 package com.example.plugins
 
 import com.example.model.Task
-import com.example.model.FakeTaskRepository
+import com.example.model.TaskRepository
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -21,7 +21,7 @@ import kotlinx.serialization.json.Json
 import java.util.Collections
 import kotlin.time.Duration.Companion.seconds
 
-fun Application.configureSockets() {
+fun Application.configureSockets(repository: TaskRepository) {
     install(WebSockets) {
         contentConverter = KotlinxWebsocketSerializationConverter(Json)
         pingPeriod = 15.seconds
@@ -35,18 +35,18 @@ fun Application.configureSockets() {
             Collections.synchronizedList<WebSocketServerSession>(ArrayList())
 
         webSocket("/tasks") {
-            sendAllTasks()
+            sendAllTasks(repository)
             close(CloseReason(CloseReason.Codes.NORMAL, "All done"))
         }
 
         webSocket("/tasks2") {
             sessions.add(this)
-            sendAllTasks()
+            sendAllTasks(repository)
 
             while (true) {
                 val newTask = receiveDeserialized<Task>()
 
-                FakeTaskRepository.addTask(newTask)
+                repository.addTask(newTask)
 
                 for (session in sessions) {
                     session.sendSerialized(newTask)
@@ -56,8 +56,8 @@ fun Application.configureSockets() {
     }
 }
 
-private suspend fun DefaultWebSocketServerSession.sendAllTasks() {
-    for (task in FakeTaskRepository.allTask()) {
+private suspend fun DefaultWebSocketServerSession.sendAllTasks(repository: TaskRepository) {
+    for (task in repository.allTask()) {
         sendSerialized(task)
         delay(1.seconds)
     }

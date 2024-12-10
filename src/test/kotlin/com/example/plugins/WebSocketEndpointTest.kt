@@ -2,6 +2,7 @@ package com.example.plugins
 
 import com.example.model.Task
 import com.example.model.FakeTaskRepository
+import com.example.model.TaskRepository
 import com.example.module
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.websocket.WebSockets
@@ -15,10 +16,18 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.scan
 import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class WebSocketEndpointTest {
+    lateinit var repository: TaskRepository
+
+    @BeforeEach
+    fun setup() {
+        repository = FakeTaskRepository()
+    }
+
     @Test
     fun testRoot() = testApplication {
         application { module() }
@@ -35,7 +44,7 @@ class WebSocketEndpointTest {
                 contentConverter = KotlinxWebsocketSerializationConverter(Json)
             }
         }
-        val expectedTasks = FakeTaskRepository.allTask()
+        val expectedTasks = repository.allTask()
         var actualTasks = emptyList<Task>()
 
         client.webSocket("/tasks") {

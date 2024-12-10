@@ -2,7 +2,7 @@ package com.example.plugins
 
 import com.example.model.Priority
 import com.example.model.Task
-import com.example.model.FakeTaskRepository
+import com.example.model.TaskRepository
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -18,7 +18,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 
-fun Application.configureRouting() {
+fun Application.configureRouting(repository: TaskRepository) {
     install(StatusPages) {
         exception<IllegalStateException> { call, cause ->
             call.respondText("App in illegal state as ${cause.message}")
@@ -46,7 +46,7 @@ fun Application.configureRouting() {
 
         route("/tasks") {
             get {
-                call.respond(FakeTaskRepository.allTask())
+                call.respond(repository.allTask())
             }
 
             get("/byName/{taskName}") {
@@ -58,7 +58,7 @@ fun Application.configureRouting() {
                     return@get
                 }
 
-                val task = FakeTaskRepository.taskByName(name)
+                val task = repository.taskByName(name)
 
                 if (task == null) {
                     call.respond(HttpStatusCode.NotFound)
@@ -80,7 +80,7 @@ fun Application.configureRouting() {
 
                 try {
                     val priority = Priority.valueOf(priorityAsText)
-                    val tasks = FakeTaskRepository.taskByPriority(priority)
+                    val tasks = repository.taskByPriority(priority)
 
                     if (tasks.isEmpty()) {
                         call.respond(HttpStatusCode.NotFound)
@@ -98,7 +98,7 @@ fun Application.configureRouting() {
                 try {
                     val task = call.receive<Task>()
 
-                    FakeTaskRepository.addTask(task)
+                    repository.addTask(task)
                     call.respond(HttpStatusCode.NoContent)
                 } catch (_: IllegalArgumentException) {
                     call.respond(HttpStatusCode.BadRequest)
@@ -116,7 +116,7 @@ fun Application.configureRouting() {
                     return@delete
                 }
 
-                if (FakeTaskRepository.removeTask(name)) {
+                if (repository.removeTask(name)) {
                     call.respond(HttpStatusCode.NoContent)
                 } else {
                     call.respond(HttpStatusCode.NotFound)
