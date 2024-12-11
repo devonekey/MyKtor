@@ -1,7 +1,7 @@
 package com.example.plugins
 
 import com.example.model.Task
-import com.example.model.TaskRepository
+import com.example.model.FakeTaskRepository
 import com.example.module
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.websocket.WebSockets
@@ -35,7 +35,7 @@ class WebSocketEndpointTest {
                 contentConverter = KotlinxWebsocketSerializationConverter(Json)
             }
         }
-        val expectedTasks = TaskRepository.allTask()
+        val expectedTasks = FakeTaskRepository.allTask()
         var actualTasks = emptyList<Task>()
 
         client.webSocket("/tasks") {

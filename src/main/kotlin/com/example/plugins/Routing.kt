@@ -2,7 +2,7 @@ package com.example.plugins
 
 import com.example.model.Priority
 import com.example.model.Task
-import com.example.model.TaskRepository
+import com.example.model.FakeTaskRepository
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -46,7 +46,7 @@ fun Application.configureRouting() {
 
         route("/tasks") {
             get {
-                call.respond(TaskRepository.allTask())
+                call.respond(FakeTaskRepository.allTask())
             }
 
             get("/byName/{taskName}") {
@@ -58,7 +58,7 @@ fun Application.configureRouting() {
                     return@get
                 }
 
-                val task = TaskRepository.taskByName(name)
+                val task = FakeTaskRepository.taskByName(name)
 
                 if (task == null) {
                     call.respond(HttpStatusCode.NotFound)
@@ -80,7 +80,7 @@ fun Application.configureRouting() {
 
                 try {
                     val priority = Priority.valueOf(priorityAsText)
-                    val tasks = TaskRepository.taskByPriority(priority)
+                    val tasks = FakeTaskRepository.taskByPriority(priority)
 
                     if (tasks.isEmpty()) {
                         call.respond(HttpStatusCode.NotFound)
@@ -98,7 +98,7 @@ fun Application.configureRouting() {
                 try {
                     val task = call.receive<Task>()
 
-                    TaskRepository.addTask(task)
+                    FakeTaskRepository.addTask(task)
                     call.respond(HttpStatusCode.NoContent)
                 } catch (_: IllegalArgumentException) {
                     call.respond(HttpStatusCode.BadRequest)
@@ -116,7 +116,7 @@ fun Application.configureRouting() {
                     return@delete
                 }
 
-                if (TaskRepository.removeTask(name)) {
+                if (FakeTaskRepository.removeTask(name)) {
                     call.respond(HttpStatusCode.NoContent)
                 } else {
                     call.respond(HttpStatusCode.NotFound)

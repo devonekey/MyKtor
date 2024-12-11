@@ -1,7 +1,7 @@
 package com.example.plugins
 
 import com.example.model.Task
-import com.example.model.TaskRepository
+import com.example.model.FakeTaskRepository
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -46,7 +46,7 @@ fun Application.configureSockets() {
             while (true) {
                 val newTask = receiveDeserialized<Task>()
 
-                TaskRepository.addTask(newTask)
+                FakeTaskRepository.addTask(newTask)
 
                 for (session in sessions) {
                     session.sendSerialized(newTask)
@@ -57,7 +57,7 @@ fun Application.configureSockets() {
 }
 
 private suspend fun DefaultWebSocketServerSession.sendAllTasks() {
-    for (task in TaskRepository.allTask()) {
+    for (task in FakeTaskRepository.allTask()) {
         sendSerialized(task)
         delay(1.seconds)
     }

@@ -1,6 +1,6 @@
 package com.example.model
 
-object TaskRepository {
+object FakeTaskRepository {
     private val tasks = mutableListOf(
         Task("cleaning", "Clean the house", Priority.Low),
         Task("gardening", "Mow the lawn", Priority.Medium),
