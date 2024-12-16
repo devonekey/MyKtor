@@ -1,8 +1,8 @@
 package com.example.plugins
 
+import com.example.model.FakeTaskRepository
 import com.example.model.Priority
 import com.example.model.Task
-import com.example.module
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
 import io.ktor.client.HttpClient
@@ -34,7 +34,10 @@ class ApiEndpointTest {
     @Test
     fun testRoot() = testApplication {
         application {
-            module()
+            val repository = FakeTaskRepository()
+
+            configureSerialization()
+            configureRouting(repository)
         }
 
         val response = client.get("/")
@@ -45,7 +48,12 @@ class ApiEndpointTest {
 
     @Test
     fun tasksCanBeFoundByPriority() = testApplication {
-        application { module() }
+        application {
+            val repository = FakeTaskRepository()
+
+            configureSerialization()
+            configureRouting(repository)
+        }
 
         val priority = Priority.Medium
         val response = client.getAsJsonPath("/tasks/byPriority/$priority")
@@ -63,7 +71,12 @@ class ApiEndpointTest {
 
     @Test
     fun invalidPriorityProduces400() = testApplication {
-        application { module() }
+        application {
+            val repository = FakeTaskRepository()
+
+            configureSerialization()
+            configureRouting(repository)
+        }
 
         val response = client.get("/tasks/byPriority/Invalid")
 
@@ -75,7 +88,12 @@ class ApiEndpointTest {
 
     @Test
     fun unusedPriorityProduces404() = testApplication {
-        application { module() }
+        application {
+            val repository = FakeTaskRepository()
+
+            configureSerialization()
+            configureRouting(repository)
+        }
 
         val response = client.get("/tasks/byPriority/Vital")
 
@@ -87,7 +105,12 @@ class ApiEndpointTest {
 
     @Test
     fun tasksCanBeFoundByName() = testApplication {
-        application { module() }
+        application {
+            val repository = FakeTaskRepository()
+
+            configureSerialization()
+            configureRouting(repository)
+        }
 
         val response = client.getAsJsonPath("/tasks/byName/shopping")
             .read<HttpResponse>("$")
@@ -103,7 +126,12 @@ class ApiEndpointTest {
 
     @Test
     fun newTasksCanBeAdded() = testApplication {
-        application { module() }
+        application {
+            val repository = FakeTaskRepository()
+
+            configureSerialization()
+            configureRouting(repository)
+        }
 
         val client = createClient {
             install(ContentNegotiation) {
@@ -139,7 +167,12 @@ class ApiEndpointTest {
 
     @Test
     fun taskCanBeDeleted() = testApplication {
-        application { module() }
+        application {
+            val repository = FakeTaskRepository()
+
+            configureSerialization()
+            configureRouting(repository)
+        }
 
         val client = createClient {
             install(ContentNegotiation) {
