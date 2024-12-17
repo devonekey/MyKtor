@@ -3,6 +3,7 @@ val junit_version: String by project
 val kotlin_version: String by project
 val ktor_version: String by project
 val logback_version: String by project
+val postgresql_version: String by project
 val slf4j_version: String by project
 val yaml_version: String by project
 
@@ -33,6 +34,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("io.ktor:ktor-server-websockets:$ktor_version")
+    implementation("org.postgresql:postgresql:$postgresql_version")
     implementation("org.slf4j:slf4j-api:$slf4j_version")
 
     testImplementation("com.jayway.jsonpath:json-path:$json_path_version")
