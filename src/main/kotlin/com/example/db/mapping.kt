@@ -10,3 +10,11 @@ object TaskTable : IntIdTable("task") {
     val description = varchar("description", 50)
     val priority = varchar("priority", 50)
 }
+
+class TaskDAO(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<TaskDAO>(TaskTable)
+
+    var name by TaskTable.name
+    var description by TaskTable.description
+    var priority by TaskTable.priority
+}
