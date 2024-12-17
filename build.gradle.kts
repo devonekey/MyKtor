@@ -1,3 +1,4 @@
+val exposed_version: String by project
 val json_path_version: String by project
 val junit_version: String by project
 val kotlin_version: String by project
@@ -34,6 +35,9 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("io.ktor:ktor-server-websockets:$ktor_version")
+    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.postgresql:postgresql:$postgresql_version")
     implementation("org.slf4j:slf4j-api:$slf4j_version")
 
